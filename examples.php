@@ -43,3 +43,35 @@ if ($json->response_code == 200 && $json->message == 'success') {
     }
     echo '</ul>';
 }
+
+// example - fetch details on a single image
+include 'src/service/ImageDetailService.php';
+$request = new BigstockAPI\Service\ImageDetailService($account);
+$request->setImage(56333507);
+$response = $request->fetchJSON();
+
+$json = json_decode($response);
+if ($json->response_code == 200 && $json->message == 'success') {
+    echo '<h1>Image Detail Fetch Result</h1>';
+    
+    $image = $json->data->image;
+    echo '<dl>';
+    echo '<dt>Title</dt>';
+    echo "<dd>{$image->title}</dd>";
+    echo '<dt>Preview</dt>';
+    echo "<dd><img src=\"{$image->preview->url}\" alt=\"{$image->description}\" height=\"{$image->preview->height}\" width=\"{$image->preview->width}\" /></dd>";
+    echo '<dt>Keywords</dt>';
+    echo '<dd>';
+    echo '<ul>';
+    
+    $keyword_list = $image->keywords;
+    $keyword_list = explode(',', $keyword_list);
+    
+    foreach ($keyword_list as $keyword) {
+        echo "<li>{$keyword}</li>";
+    }
+    
+    echo '</ul>';
+    echo '</dd>';
+    echo '</dl>';
+}
