@@ -31,6 +31,9 @@ Changelog
 v1.0 (2014-01-06)
  - initial release
  - basic search service included
+v1.1 (2014-01-07)
+ - minor clean up of search
+ - added category and image detail service
 
 ------------------
  - Project at GitHub [jacobemerck/bigstock-api-services](https://github.com/jacobemerick/bigstock-api-services)
