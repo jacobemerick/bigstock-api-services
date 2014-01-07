@@ -31,10 +31,9 @@ class SearchService extends AbstractService implements ServiceInterface
     protected $query_list = array();
 
     /**
-     * Term(s) to exclude from the search
-     * Exclude terms can be pipe delimited to pass in multiple
+     * Term to exclude from the search
      */
-    protected $exclude_list = array();
+    protected $exclude;
 
     /**
      * Page number, a way to iterate through a large set of results
@@ -173,7 +172,7 @@ class SearchService extends AbstractService implements ServiceInterface
 
     /**
      * Add term for the search
-     * Note: apparently you cannot have crossover between the search and exclusion list
+     * Note: apparently you cannot have crossover between the search list and exclude term
      *
      * @param   string  $term   term for the search
      */
@@ -182,8 +181,8 @@ class SearchService extends AbstractService implements ServiceInterface
         if (strlen($term) < 1) {
             throw new Exception('The search term must be longer than 0 characters');
         }
-        if (in_array($term, $this->exclude_list)) {
-            throw new Exception('You cannot add a search term for something in the exclusion list');
+        if ($term == $this->exclude) {
+            throw new Exception('You cannot add a search term for something that is already excluded');
         }
         
         array_push($this->query_list, $term);
@@ -191,7 +190,7 @@ class SearchService extends AbstractService implements ServiceInterface
 
     /**
      * Add term for exclusion
-     * Note: apparently you cannot have crossover between the search and exclusion list
+     * Note: apparently you cannot have crossover between the search list and exclude term
      *
      * @param   string  $term   term for exclusion
      */
@@ -204,7 +203,7 @@ class SearchService extends AbstractService implements ServiceInterface
             throw new Exception('You cannot add an exclusion term for something in the search list');
         }
         
-        array_push($this->exclude_list, $term);
+        $this->exclude = $term;
     }
 
     /**
@@ -388,10 +387,10 @@ class SearchService extends AbstractService implements ServiceInterface
             throw new Exception('You must enter at least one search term before making a request');
         }
         
-        $query_parameters['q'] = implode('|', $this->query_list);
+        $query_parameters['q'] = implode('&', $this->query_list);
         
-        if (count($this->exclude_list) > 0) {
-            $query_parameters['exclude'] = implode('|', $this->exclude_list);
+        if (isset($this->exclude)) {
+            $query_parameters['exclude'] = $this->exclude;
         }
         if (isset($this->page)) {
             $query_parameters['page'] = $this->page;
