@@ -373,11 +373,9 @@ class SearchService extends AbstractService implements ServiceInterface
     }
 
     /**
-     * Format the URL query string with all the parameters
-     * Note: this does not validate the parameters
-     * @url https://developers.google.com/maps/documentation/geocoding/#GeocodingRequests
+     * Format the URL endpoint with all the parameters
      *
-     * @return  string  query string for the request
+     * @return  string  endpoint string for the request
      */
     public function getEndpoint()
     {
