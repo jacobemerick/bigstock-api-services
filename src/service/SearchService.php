@@ -381,12 +381,9 @@ class SearchService extends AbstractService implements ServiceInterface
     {
         $query_parameters = array();
         
-        if (count($this->query_list) < 1) {
-            throw new Exception('You must enter at least one search term before making a request');
+        if (count($this->query_list) > 0) {
+            $query_parameters['q'] = implode('&', $this->query_list);
         }
-        
-        $query_parameters['q'] = implode('&', $this->query_list);
-        
         if (isset($this->exclude)) {
             $query_parameters['exclude'] = $this->exclude;
         }
