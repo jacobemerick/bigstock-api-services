@@ -13,15 +13,14 @@ Requirements
 Usage
 ------------------
 There is no default variables that you need to configure before use.
-Depending on which service you try to use there may be some minimum settings, though.
+All services require an API account key upon instantiation.
+Depending on which service you try to use there may be some additional minimum settings before making the request.
 [Bigstock API](http://help.bigstockphoto.com/entries/20843622-api-overview)
 
 
 Future Enhancements
 ------------------
  - polish search
- - categories
- - image detail
  - purchase (maybe)
  - download (maybe)
  - lightbox manipulation
