@@ -41,8 +41,8 @@ class CategoryService extends AbstractService implements ServiceInterface
      */
     public function getEndpoint()
     {
-        $domain = $this->getEndpointDomain();
-        return $domain;
+        $endpoint = $this->getEndpointDomain();
+        return $endpoint;
     }
 
 }
