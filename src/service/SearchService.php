@@ -117,15 +117,6 @@ class SearchService extends AbstractService implements ServiceInterface
     protected $size_constraint;
 
     /**
-     * List of acceptable size settings
-     */
-    public static $ACCEPTABLE_SIZE_LIST = array(
-        'm',
-        'l',
-        'xl',
-    );
-
-    /**
      * Boolean to allow mature images through
      * Unlike the other 'flags', this is either 'no mature images' or 'normal + mature images'
      * @default     'y'

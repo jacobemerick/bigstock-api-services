@@ -45,26 +45,30 @@ if ($json->response_code == 200 && $json->message == 'success') {
 }
 
 // example - fetch details on a single image
+$image = 5633507;
+
 include 'src/service/ImageDetailService.php';
 $request = new BigstockAPI\Service\ImageDetailService($account);
-$request->setImage(56333507);
+$request->setImage($image);
 $response = $request->fetchJSON();
 
 $json = json_decode($response);
 if ($json->response_code == 200 && $json->message == 'success') {
     echo '<h1>Image Detail Fetch Result</h1>';
     
-    $image = $json->data->image;
+    $image_data = $json->data->image;
     echo '<dl>';
+    echo '<dt>ID</dt>';
+    echo "<dd>{$image}</dd>";
     echo '<dt>Title</dt>';
-    echo "<dd>{$image->title}</dd>";
+    echo "<dd>{$image_data->title}</dd>";
     echo '<dt>Preview</dt>';
-    echo "<dd><img src=\"{$image->preview->url}\" alt=\"{$image->description}\" height=\"{$image->preview->height}\" width=\"{$image->preview->width}\" /></dd>";
+    echo "<dd><img src=\"{$image_data->preview->url}\" alt=\"{$image_data->description}\" height=\"{$image_data->preview->height}\" width=\"{$image_data->preview->width}\" /></dd>";
     echo '<dt>Keywords</dt>';
     echo '<dd>';
     echo '<ul>';
     
-    $keyword_list = $image->keywords;
+    $keyword_list = $image_data->keywords;
     $keyword_list = explode(',', $keyword_list);
     
     foreach ($keyword_list as $keyword) {
@@ -73,5 +77,30 @@ if ($json->response_code == 200 && $json->message == 'success') {
     
     echo '</ul>';
     echo '</dd>';
+    echo '</dl>';
+}
+
+// example - purchase an image
+$secret_key = ''; // put your secret key from the /partners page here
+$image = 5633507;
+
+include 'src/service/PurchaseService.php';
+$request = new BigstockAPI\Service\PurchaseService($account, $secret_key);
+$request->setImage($image);
+$request->setSizeCode('m');
+$response = $request->fetchJSON();
+
+$json = json_decode($response);
+if ($json->response_code == 200 && $json->message == 'success') {
+    echo '<h1>Image Purchase Request</h1>';
+    
+    $purchase_data = $json->data;
+    echo '<dl>';
+    echo '<dt>ID</dt>';
+    echo "<dd>{$image}</dd>";
+    echo '<dt>Amount</dt>';
+    echo "<dd>{$purchase_data->currency_amount} ({$purchase_data->currency_code})</dd>";
+    echo '<dt>Download Key</dt>';
+    echo "<dd>{$purchase_data->download_id}</dd>";
     echo '</dl>';
 }

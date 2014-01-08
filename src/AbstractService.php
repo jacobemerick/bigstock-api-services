@@ -28,6 +28,15 @@ abstract class AbstractService
     protected $account_id;
 
     /**
+     * List of acceptable size settings
+     */
+    public static $ACCEPTABLE_SIZE_LIST = array(
+        'm',
+        'l',
+        'xl',
+    );
+
+    /**
      * Flag on whether to use the production endpoint or not
      * Default to false (use test endpoint) for safety
      */
@@ -63,6 +72,18 @@ abstract class AbstractService
         $service = $this->getServiceName();
         
         return sprintf($domain, $account, $service);
+    }
+
+    /**
+     * Helper method to create auth hash
+     * Auth hash uses sha1 with (secret key . account id . {parameter})
+     *
+     * @param   string  $parameter  extra parameter for the request (varies by request)
+     * @return  string              hash for the request
+     */
+    protected function create_hash_key($parameter)
+    {
+        return sha1("{$this->secret_key}{$this->account_id}{$parameter}");
     }
 
     /**
