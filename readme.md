@@ -12,18 +12,10 @@ Requirements
 
 Usage
 ------------------
-There is no default variables that you need to configure before use.
-All services require an API account key upon instantiation.
+You will need to visit [Bigstock/partners](https://www.bigstockphoto.com/partners) to register for an API key.
+Some services require a secret key as well, which you will be issued to you with the API key.
 Depending on which service you try to use there may be some additional minimum settings before making the request.
 [Bigstock API](http://help.bigstockphoto.com/entries/20843622-api-overview)
-
-
-Future Enhancements
-------------------
- - polish search
- - purchase (maybe)
- - download (maybe)
- - lightbox manipulation
 
 
 Changelog
@@ -31,9 +23,14 @@ Changelog
 v1.0 (2014-01-06)
  - initial release
  - basic search service included
+
 v1.1 (2014-01-07)
  - minor clean up of search
  - added category and image detail service
+
+v1.2 (2014-01-08)
+ - minor cleanup of abstract classes
+ - added purchase, download, and lightbox service
 
 ------------------
  - Project at GitHub [jacobemerck/bigstock-api-services](https://github.com/jacobemerick/bigstock-api-services)
