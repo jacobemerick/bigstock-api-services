@@ -89,12 +89,24 @@ abstract class AbstractService
     /**
      * Fetch the response as a JSON string
      *
-     * @return  string  json response from endpoint
+     * @return  stdclass    json response from endpoint
      */
     public function fetchJSON()
     {
+        $response = $this->fetchResponse();
+        return json_decode($response);
+    }
+
+    /**
+     * Make a request based on the defined service and parameters
+     *
+     * @return  string  raw response from bigstock api
+     */
+    public function fetchResponse()
+    {
         $url = $this->getEndpoint();
-        return $this->executeRequest($url);
+        $response = $this->executeRequest($url);
+        return $response;
     }
 
     // @todo look into jsonp request differences

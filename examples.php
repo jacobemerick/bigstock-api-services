@@ -13,11 +13,10 @@ $request->setSizeConstraint('l');
 $request->setLimit(20);
 $response = $request->fetchJSON();
 
-$json = json_decode($response);
-if ($json->response_code == 200 && $json->message == 'success') {
+if ($response->response_code == 200 && $response->message == 'success') {
     echo '<h1>Image Search Result</h1>';
     echo '<ul>';
-    foreach ($json->data->images as $image) {
+    foreach ($response->data->images as $image) {
         $url = $image->small_thumb->url;
         $height = $image->small_thumb->height;
         $width = $image->small_thumb->width;
@@ -34,11 +33,10 @@ include 'src/service/CategoryService.php';
 $request = new BigstockAPI\Service\CategoryService($account);
 $response = $request->fetchJSON();
 
-$json = json_decode($response);
-if ($json->response_code == 200 && $json->message == 'success') {
+if ($response->response_code == 200 && $response->message == 'success') {
     echo '<h1>Category Fetch Result</h1>';
     echo '<ul>';
-    foreach ($json->data as $category) {
+    foreach ($response->data as $category) {
         echo "<li>{$category->name}</li>";
     }
     echo '</ul>';
@@ -52,11 +50,10 @@ $request = new BigstockAPI\Service\ImageDetailService($account);
 $request->setImage($image);
 $response = $request->fetchJSON();
 
-$json = json_decode($response);
-if ($json->response_code == 200 && $json->message == 'success') {
+if ($response->response_code == 200 && $response->message == 'success') {
     echo '<h1>Image Detail Fetch Result</h1>';
     
-    $image_data = $json->data->image;
+    $image_data = $response->data->image;
     echo '<dl>';
     echo '<dt>ID</dt>';
     echo "<dd>{$image}</dd>";
@@ -81,7 +78,7 @@ if ($json->response_code == 200 && $json->message == 'success') {
 }
 
 // example - purchase an image
-$secret_key = ''; // put your secret key from the /partners page here
+$secret_key = '';
 $image = 5633507;
 
 include 'src/service/PurchaseService.php';
@@ -90,11 +87,10 @@ $request->setImage($image);
 $request->setSizeCode('m');
 $response = $request->fetchJSON();
 
-$json = json_decode($response);
-if ($json->response_code == 200 && $json->message == 'success') {
+if ($response->response_code == 200 && $response->message == 'success') {
     echo '<h1>Image Purchase Request</h1>';
     
-    $purchase_data = $json->data;
+    $purchase_data = $response->data;
     echo '<dl>';
     echo '<dt>ID</dt>';
     echo "<dd>{$image}</dd>";
@@ -103,4 +99,22 @@ if ($json->response_code == 200 && $json->message == 'success') {
     echo '<dt>Download Key</dt>';
     echo "<dd>{$purchase_data->download_id}</dd>";
     echo '</dl>';
+}
+
+// example - download an image
+$secret_key = '';
+$download_id = $purchase_data->download_id;
+
+include 'src/service/DownloadService.php';
+$request = new BigstockAPI\Service\DownloadService($account, $secret_key);
+$request->setDownload($download_id);
+$response = $request->fetchResponse();
+
+// if the request fails, it returns as json
+$json_response = json_decode($response);
+if ($json_response === null) {
+    $image_data = base64_encode($response);
+    
+    echo '<h1>Image Download Request</h1>';
+    echo "<img src=\"data:image/jpeg;base64,{$image_data}\" />";
 }

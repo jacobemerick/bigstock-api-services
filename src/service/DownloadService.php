@@ -1,8 +1,8 @@
 <?php
 
 /**
- * Main class for Bigstock API Purchase Service
- * @url http://help.bigstockphoto.com/entries/20843622-api-overview#purchase
+ * Main class for Bigstock API Download Service
+ * @url http://help.bigstockphoto.com/entries/20843622-api-overview#download
  * For licensing and examples:
  *
  * @see https://github.com/jacobemerick/bigstock-api-services
@@ -21,18 +21,13 @@ use BigstockAPI\AbstractService;
 use BigstockAPI\ServiceInterface;
 use BigstockAPI\Exception;
 
-class PurchaseService extends AbstractService implements ServiceInterface
+class DownloadService extends AbstractService implements ServiceInterface
 {
 
     /**
-     * Image ID to purchase
+     * Download id passed over from purchase service
      */
-    protected $image_id;
-
-    /**
-     * Requested size for purchase
-     */
-    protected $size_code;
+    protected $download_id;
 
     /**
      * Secret key needed to perform purchase
@@ -65,28 +60,13 @@ class PurchaseService extends AbstractService implements ServiceInterface
      *
      * @param   string  $image_id  the image that you want to download
      */
-    // @todo this might work better as a trait
-    public function setImage($image_id)
+    public function setDownload($download_id)
     {
-        if (!is_int($image_id) || $image_id < 1) {
-            throw new Exception('An unacceptable image id passed in');
+        if (!is_int($download_id) || $download_id < 1) {
+            throw new Exception('An unacceptable download id passed in');
         }
         
-        $this->image_id = $image_id;
-    }
-
-    /**
-     * Flag to set a preference for size
-     *
-     * @param       string  $size   size setting for image purchase
-     */
-    public function setSizeCode($size)
-    {
-        if ($size != '' && !in_array($size, self::$ACCEPTABLE_SIZE_LIST)) {
-            throw new Exception('An unacceptable size setting was passed in');
-        }
-        
-        $this->size_code = $size;
+        $this->download_id = $download_id;
     }
 
     /**
@@ -96,7 +76,7 @@ class PurchaseService extends AbstractService implements ServiceInterface
      */
     public function getServiceName()
     {
-        return 'purchase';
+        return 'download';
     }
 
     /**
@@ -106,20 +86,16 @@ class PurchaseService extends AbstractService implements ServiceInterface
      */
     public function getEndpoint()
     {
-        if (!isset($this->image_id)) {
-            throw new Exception('You must define an image for purchase');
-        }
-        if (!isset($this->size_code)) {
-            throw new Exception('You must define a size code');
+        if (!isset($this->download_id)) {
+            throw new Exception('You must define a download id');
         }
         if (!isset($this->secret_key)) {
             throw new Exception('You must pass in a secret key before making a call');
         }
         
         $query_parameters = array();
-        $query_parameters['image_id'] = $this->image_id;
-        $query_parameters['size_code'] = $this->size_code;
-        $query_parameters['auth_key'] = $this->create_hash_key($this->image_id);
+        $query_parameters['download_id'] = $this->download_id;
+        $query_parameters['auth_key'] = $this->create_hash_key($this->download_id);
         
         $domain = $this->getEndpointDomain();
         $query_string = http_build_query($query_parameters);
