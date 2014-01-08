@@ -1,6 +1,7 @@
 <?php
 
-$account = 0; // your account id here
+$account = 0; // YOUR ACCOUNT ID HERE
+
 
 // example - do a search for pictures of waterfalls
 include 'src/service/SearchService.php';
@@ -15,8 +16,11 @@ $response = $request->fetchJSON();
 
 if ($response->response_code == 200 && $response->message == 'success') {
     echo '<h1>Image Search Result</h1>';
+    
+    $images = $response->data->images;
+    
     echo '<ul>';
-    foreach ($response->data->images as $image) {
+    foreach ($images as $image) {
         $url = $image->small_thumb->url;
         $height = $image->small_thumb->height;
         $width = $image->small_thumb->width;
@@ -27,6 +31,7 @@ if ($response->response_code == 200 && $response->message == 'success') {
     }
     echo '</ul>';
 }
+
 
 // example - fetch all categories
 include 'src/service/CategoryService.php';
@@ -42,8 +47,9 @@ if ($response->response_code == 200 && $response->message == 'success') {
     echo '</ul>';
 }
 
+
 // example - fetch details on a single image
-$image = 5633507;
+$image = 5633507; // IMAGE ID HERE
 
 include 'src/service/ImageDetailService.php';
 $request = new BigstockAPI\Service\ImageDetailService($account);
@@ -77,9 +83,10 @@ if ($response->response_code == 200 && $response->message == 'success') {
     echo '</dl>';
 }
 
+
 // example - purchase an image
-$secret_key = '';
-$image = 5633507;
+$secret_key = ''; // YOUR SECRET KEY HERE
+$image = 5633507; // IMAGE ID HERE
 
 include 'src/service/PurchaseService.php';
 $request = new BigstockAPI\Service\PurchaseService($account, $secret_key);
@@ -101,9 +108,10 @@ if ($response->response_code == 200 && $response->message == 'success') {
     echo '</dl>';
 }
 
+
 // example - download an image
-$secret_key = '';
-$download_id = $purchase_data->download_id;
+$secret_key = ''; // YOUR SECRET KEY HERE
+$download_id = 0; // DOWNLOAD ID HERE
 
 include 'src/service/DownloadService.php';
 $request = new BigstockAPI\Service\DownloadService($account, $secret_key);
@@ -117,4 +125,41 @@ if ($json_response === null) {
     
     echo '<h1>Image Download Request</h1>';
     echo "<img src=\"data:image/jpeg;base64,{$image_data}\" />";
+}
+
+
+// example - look up a private lightbox
+$secret_key = ''; // YOUR SECRET KEY HERE
+$lightbox_id = 0; // LIGHTBOX ID HERE
+
+include 'src/service/LightboxService.php';
+$request = new BigstockAPI\Service\LightboxService($account);
+$request->setSecretKey($secret_key);
+$request->setLightbox($lightbox_id);
+$response = $request->fetchJSON();
+
+if ($response->response_code == 200 && $response->message = 'success') {
+    echo '<h1>Lightbox Request</h1>';
+    
+    $lightbox = $response->data->lightbox;
+    
+    echo '<dl>';
+    echo '<dt>Title</dt>';
+    echo "<dd>{$lightbox->name}</dd>";
+    echo '<dt>Items</dt>';
+    echo "<dd>{$lightbox->items}</dd>";
+    echo '</dl>';
+    
+    $images = $response->data->images;
+    
+    echo '<ul>';
+    foreach ($images as $image) {
+        $url = $image->small_thumb->url;
+        $height = $image->small_thumb->height;
+        $width = $image->small_thumb->width;
+        
+        $title = $image->title;
+        
+        echo "<li><img src=\"{$url}\" alt=\"{$title}\" height=\"{$height}\" width=\"{$width}\" /> - {$title}</li>";
+    }
 }
